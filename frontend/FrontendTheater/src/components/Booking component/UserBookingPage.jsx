@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../../auth/AuthContext';
-import BookingDetails from './BookingDetails';
-import './UserBookingsPage.css';
+import ConfirmationDialog from '../AdminComponent/ConfirmationDialog';
+import './UserBookingPage.css';
 
 const UserBookingsPage = () => {
     const [bookings, setBookings] = useState([]);
+    const [eventDetails, setEventDetails] = useState({});
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [selectedBooking, setSelectedBooking] = useState(null);
-    const { token } = useAuth();
+    const [error, setError] = useState(null);
+    const [deleteBookingId, setDeleteBookingId] = useState(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     useEffect(() => {
         fetchBookings();
@@ -17,104 +18,136 @@ const UserBookingsPage = () => {
 
     const fetchBookings = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/users/bookings', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+            setLoading(true);
+            const response = await axios.get('http://localhost:3000/api/v1/user/bookings', {
+                withCredentials: true
             });
-            setBookings(response.data);
+
+            let bookingsData = [];
+            if (response.data && Array.isArray(response.data)) {
+                bookingsData = response.data;
+            } else if (response.data && response.data.userId && Array.isArray(response.data.userId)) {
+                bookingsData = response.data.userId;
+            } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
+                bookingsData = response.data.data;
+            } else {
+                setError("Unexpected data format from API");
+                setLoading(false);
+                return;
+            }
+
+            setBookings(bookingsData);
+
+            // Fetch event details for each booking
+            const events = {};
+            await Promise.all(
+                bookingsData.map(async (booking) => {
+                    if (booking.eventId) {
+                        try {
+                            const eventResponse = await axios.get(`http://localhost:3000/api/v1/event/${booking.eventId}`, {
+                                withCredentials: true
+                            });
+
+                            if (eventResponse.data.success && eventResponse.data.data) {
+                                events[booking.eventId] = eventResponse.data.data;
+                            }
+                        } catch (err) {
+                            console.error(`Error fetching event for booking ${booking._id}:`, err);
+                        }
+                    }
+                })
+            );
+
+            setEventDetails(events);
         } catch (err) {
-            setError('Failed to fetch bookings. Please try again later.');
+            console.error("Error fetching bookings:", err);
+            setError(err.response?.data?.message || "Failed to load bookings");
         } finally {
             setLoading(false);
         }
     };
 
-    const handleCancelBooking = async (bookingId) => {
-        if (!window.confirm('Are you sure you want to cancel this booking?')) {
-            return;
-        }
+    const handleCancelClick = (bookingId) => {
+        setDeleteBookingId(bookingId);
+        setShowDeleteConfirm(true);
+    };
 
+    const confirmCancel = async () => {
         try {
-            await axios.delete(`http://localhost:3000/bookings/${bookingId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+            await axios.delete(`http://localhost:3000/api/v1/booking/${deleteBookingId}`, {
+                withCredentials: true
             });
-            setBookings(bookings.filter(booking => booking._id !== bookingId));
+            // Remove from local state
+            setBookings(bookings.filter(booking => booking._id !== deleteBookingId));
+            setShowDeleteConfirm(false);
         } catch (err) {
-            setError('Failed to cancel booking. Please try again later.');
+            console.error("Error canceling booking:", err);
+            alert(`Error: ${err.response?.data?.message || err.message}`);
         }
     };
 
-    if (loading) {
-        return <div className="loading">Loading bookings...</div>;
-    }
-
-    if (error) {
-        return <div className="error-message">{error}</div>;
-    }
+    if (loading) return <div className="loading">Loading your bookings...</div>;
+    if (error) return <div className="error">Error: {error}</div>;
 
     return (
-        <div className="bookings-page">
+        <div className="bookings-container">
             <h1>My Bookings</h1>
 
             {bookings.length === 0 ? (
-                <p className="no-bookings">You haven't made any bookings yet.</p>
+                <div className="no-bookings">
+                    <p>You haven't made any bookings yet.</p>
+                    <Link to="/events" className="browse-events-link">Browse Events</Link>
+                </div>
             ) : (
                 <div className="bookings-list">
-                    {bookings.map(booking => (
-                        <div key={booking._id} className="booking-card">
-                            <div className="booking-header">
-                                <h3>{booking.eventId.title}</h3>
-                                <span className={`status ${booking.status}`}>
-                                    {booking.status}
-                                </span>
-                            </div>
+                    {bookings.map((booking) => {
+                        const event = booking.eventId && eventDetails[booking.eventId]
+                            ? eventDetails[booking.eventId]
+                            : booking.event || {};
 
-                            <div className="booking-details">
-                                <p>
-                                    <strong>Date:</strong>{' '}
-                                    {new Date(booking.eventId.date).toLocaleDateString()}
-                                </p>
-                                <p>
-                                    <strong>Location:</strong> {booking.eventId.location}
-                                </p>
-                                <p>
-                                    <strong>Tickets:</strong> {booking.numberOfTickets}
-                                </p>
-                                <p>
-                                    <strong>Total Price:</strong> ${booking.totalPrice}
-                                </p>
-                            </div>
+                        return (
+                            <div key={booking._id} className="booking-card">
+                                <div className="booking-info">
+                                    <h3>{event.title || 'Event Title Unavailable'}</h3>
+                                    <span className="booking-date">
+                                        {new Date(booking.createdAt).toLocaleDateString()}
+                                    </span>
 
-                            <div className="booking-actions">
-                                <button
-                                    className="view-details-button"
-                                    onClick={() => setSelectedBooking(booking)}
-                                >
-                                    View Details
-                                </button>
-                                {booking.status === 'confirmed' && (
-                                    <button
-                                        className="cancel-button"
-                                        onClick={() => handleCancelBooking(booking._id)}
-                                    >
-                                        Cancel Booking
-                                    </button>
-                                )}
+                                    <div className="booking-details">
+                                        <p>Tickets: <strong>{booking.quantity || booking.numberOfTickets}</strong></p>
+                                        <p>Total: <strong>${booking.totalPrice?.toFixed(2) || (booking.quantity * event?.ticketPrice).toFixed(2) || 'N/A'}</strong></p>
+                                        <p>Status: <span className={`status ${(booking.status || 'confirmed').toLowerCase()}`}>
+                                            {booking.status || 'Confirmed'}
+                                        </span></p>
+                                    </div>
+
+                                    <div className="booking-actions">
+                                        <Link to={`/bookings/${booking._id}`} className="view-details-btn">View Details</Link>
+                                        {booking.status !== 'Cancelled' && (
+                                            <button
+                                                onClick={() => handleCancelClick(booking._id)}
+                                                className="cancel-btn"
+                                            >
+                                                Cancel Booking
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
 
-            {selectedBooking && (
-                <BookingDetails
-                    booking={selectedBooking}
-                    onClose={() => setSelectedBooking(null)}
-                />
-            )}
+            <ConfirmationDialog
+                isOpen={showDeleteConfirm}
+                title="Confirm Cancellation"
+                message="Are you sure you want to cancel this booking? This action cannot be undone."
+                confirmText="Yes, Cancel Booking"
+                cancelText="Keep Booking"
+                onConfirm={confirmCancel}
+                onCancel={() => setShowDeleteConfirm(false)}
+            />
         </div>
     );
 };

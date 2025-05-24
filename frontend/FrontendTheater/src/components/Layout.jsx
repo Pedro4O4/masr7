@@ -1,31 +1,65 @@
 // src/components/Layout.jsx
-import { Link, Outlet } from "react-router-dom";
+import {  Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import "./Layout.css";
 
 export default function Layout() {
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
+    const location = useLocation();
+
+    // Determine if we're in an admin or organizer section
+    const isAdminSection = location.pathname.startsWith('/admin');
+    const isOrganizerSection = location.pathname.startsWith('/events') &&
+        user.role === "Organizer";
+    const isStandardUserViewingEvents = location.pathname.startsWith('/events') &&
+        user.role !== "Organizer";
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <header className="bg-blue-600 text-white p-4 flex justify-between items-center">
-                <h1 className="text-xl font-semibold">Event Portal</h1>
-                <nav className="space-x-6">
-                    <Link to="/" className="hover:underline">Home</Link>
-                    <Link to="/" className="hover:underline">Events</Link>
-                    {user?.role === "Standard User" && <Link to="/" className="hover:underline">Users</Link>}
-                    {user?.role === "Organizer" && <Link to="/" className="hover:underline">Organizer Dashboard</Link>}
-                    {user?.role === "System Admin" && <Link to="/" className="hover:underline">Admin Panel</Link>}
-                    <button onClick={logout} className="bg-red-500 px-3 py-1 rounded text-white hover:bg-red-600">Logout</button>
+        <div className="layout-container">
+            <header className="layout-header">
+                <div className="header-content">
+                    <h1 className="portal-title-large">Event Portal</h1>
+
+                    {user && (isStandardUserViewingEvents || isAdminSection || isOrganizerSection) && (
+                        <div className="user-greeting-expanded">
+                            <div className="user-avatar">
+                                {user.profilePicture ? (
+                                    <img src={user.profilePicture} alt={user.name} />
+                                ) : (
+                                    <div className="avatar-placeholder">
+                                        {user.name.charAt(0).toUpperCase()}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="user-data">
+                                <div className="user-name">Hi {user.name}</div>
+                                <div className="user-details">
+                                    <div className="user-info-row">
+                                        <span className="user-email">{user.email}</span>
+                                        <span className="user-role">{user.role || "Member"}</span>
+                                        {isAdminSection && <span className="dashboard-label">Admin Dashboard</span>}
+                                        {isOrganizerSection && <span className="dashboard-label">Organizer Dashboard</span>}
+                                        {isStandardUserViewingEvents && <span className="dashboard-label">Event Explorer</span>}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                <nav className="main-navigation">
+                    {/* Navigation links here */}
                 </nav>
             </header>
 
-            <main className="flex-1 p-6 bg-gray-50">
+            <main className="main-content">
                 <Outlet />
             </main>
 
-            <footer className="bg-gray-800 text-white p-4 text-center">
+            <footer className="layout-footer">
                 &copy; {new Date().getFullYear()} Event Management Portal
             </footer>
         </div>
     );
 }
+

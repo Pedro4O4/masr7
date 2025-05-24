@@ -1,64 +1,459 @@
-/* Filter tabs colors */
+/* Enhanced AdminEventsPage.css with modern graphics */
+
+.admin-events-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+/* Creative header with gradient overlay and pattern */
+.event-header {
+    margin-bottom: 2rem;
+    position: relative;
+    background-image:
+            linear-gradient(135deg, rgba(44, 62, 175, 0.95), rgba(67, 56, 202, 0.9)),
+            url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80');
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    padding: 2rem;
+    color: white;
+    box-shadow: 0 15px 30px rgba(67, 56, 202, 0.3);
+    overflow: hidden;
+}
+
+/* Animated floating particles in header */
+.event-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+    opacity: 0.1;
+    animation: slide 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes slide {
+    0% { background-position: 0 0; }
+    100% { background-position: 500px 500px; }
+}
+
+/* Enhanced title with better typography */
+.page-title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    position: relative;
+    letter-spacing: -0.5px;
+}
+
+.page-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 80px;
+    height: 5px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.4);
+}
+
+.admin-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.organizer-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* Creative filter tabs with better visual feedback */
+.filter-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
 .filter-tab {
-    background-color: black;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
+    padding: 0.7rem 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 30px;
+    background: transparent;
+    color: white;
     cursor: pointer;
-    transition: all 0.2s ease;
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
 }
 
 .filter-tab:hover {
-    background-color: #dee2e6;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .filter-tab.active {
-    background-color: #6c63ff;
-    color: black;
+    background: white;
+    color: rgb(67, 56, 202);
+    border-color: white;
+    box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Button colors */
-.approve-button {
-    background-color: #28a745;
-    color: white;
+/* Animated background for active tab */
+.filter-tab.active::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shine 2s infinite;
+    z-index: -1;
 }
 
-.approve-button:hover {
-    background-color: #218838;
+@keyframes shine {
+    0% { transform: translateX(-100%); }
+    60%, 100% { transform: translateX(100%); }
 }
 
-.cancel-button {
-    background-color: #dc3545;
-    color: white;
+/* Rich background with subtle pattern */
+body {
+    background-color: #f0f2fa;
+    background-image: url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
+    background-attachment: fixed;
 }
 
-.cancel-button:hover {
-    background-color: #c82333;
+/* Event grid with enhanced appearance */
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
 }
 
-/* Event button styling */
-.event-button {
-    padding: 8px 16px;
+/* Glass morphism card styling with rich visuals */
+.event-card-with-actions {
+    position: relative;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 15px 35px rgba(24, 24, 79, 0.15);
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    transform-origin: center bottom;
+}
+
+.event-card-with-actions:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(24, 24, 79, 0.2);
+}
+
+/* Enhanced status indicators with animated 3D effect */
+.status-indicator {
+    width: 8px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-shadow: inset -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.status-pending {
+    background: linear-gradient(to bottom, #f59e0b, #d97706);
+    animation: pulse 2s infinite;
+}
+
+.status-approved {
+    background: linear-gradient(to bottom, #10b981, #059669);
+    animation: glow 3s infinite alternate;
+}
+
+.status-declined {
+    background: linear-gradient(to bottom, #ef4444, #b91c1c);
+}
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.5); }
+    100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.8); }
+}
+
+/* Improved event card styling */
+.event-card {
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
+}
+
+/* Event images with better presentation */
+.event-card img {
+    border-radius: 12px;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.6s ease, filter 0.6s ease;
+}
+
+.event-card:hover img {
+    transform: scale(1.05);
+    filter: brightness(1.05);
+}
+
+.event-card h3 {
+    margin-top: 1rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2d3748;
+    background: linear-gradient(90deg, #2c3e78, #43389e);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.event-card p {
+    color: #4a5568;
+    margin: 0.6rem 0;
+    line-height: 1.6;
+}
+
+/* Enhanced button group */
+.event-actions {
+    padding: 1.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: rgba(243, 244, 249, 0.85);
+    border-top: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* Modern 3D button styling with hover effects */
+.event-button, .view-events-button {
+    padding: 10px 18px;
     border: none;
-    border-radius: 4px;
-    background-color: #6c63ff;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4c51bf 0%, #5a67d8 100%);
     color: white;
     cursor: pointer;
     text-decoration: none;
-    display: inline-block;
-    margin-right: 6px;
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
     text-align: center;
-    transition: all 0.2s ease;
+    transition: all 0.4s ease;
+    box-shadow: 0 5px 15px rgba(76, 81, 191, 0.3);
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
 }
 
-.event-button:hover {
-    background-color: #5a52d5;
+.event-button::before, .view-events-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s;
 }
 
-/* Error message */
+.event-button:hover::before, .view-events-button:hover::before {
+    left: 100%;
+}
+
+.event-button:hover, .view-events-button:hover {
+    background: linear-gradient(135deg, #434190 0%, #4c51bf 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(76, 81, 191, 0.4);
+}
+
+.event-button:active, .view-events-button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(76, 81, 191, 0.3);
+}
+
+/* Enhanced action buttons with custom colors */
+.view-events-button {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.approve-button {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: 0 5px 15px rgba(5, 150, 105, 0.3);
+}
+
+.approve-button:hover {
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.4);
+}
+
+.cancel-button {
+    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+}
+
+.cancel-button:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+}
+
+.button-icon {
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+/* Enhanced empty state styling */
+.no-events-container {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 0;
+}
+
+.no-events {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, rgba(249, 250, 251, 0.9) 0%, rgba(243, 244, 246, 0.9) 100%);
+    border-radius: 16px;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+}
+
+.no-events::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("https://www.transparenttextures.com/patterns/diagonal-noise.png");
+    opacity: 0.05;
+}
+
+.no-events h2 {
+    margin-bottom: 1rem;
+    color: #4338ca;
+    font-size: 1.8rem;
+}
+
+.no-events p {
+    color: #6b7280;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Enhanced loading animation */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+    font-size: 1.3rem;
+    color: #4338ca;
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(67, 56, 202, 0.2);
+    border-radius: 50%;
+    border-top-color: #4338ca;
+    animation: spin 1.2s ease-in-out infinite;
+    position: absolute;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Error message with improved design */
 .error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: linear-gradient(135deg, rgba(254, 226, 226, 0.9), rgba(254, 202, 202, 0.9));
+    color: #b91c1c;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    border-left: 5px solid #dc2626;
+    font-weight: 500;
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.15);
+    backdrop-filter: blur(8px);
+}
+
+/* Responsive adjustments with better mobile experience */
+@media (max-width: 768px) {
+    .event-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .organizer-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filter-tabs {
+        overflow-x: auto;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-tab {
+        white-space: nowrap;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .event-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .event-header {
+        padding: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.8rem;
+    }
+
+    .event-actions {
+        flex-direction: column;
+    }
+
+    .event-button {
+        width: 100%;
+    }
 }

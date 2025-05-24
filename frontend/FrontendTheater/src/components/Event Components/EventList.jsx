@@ -23,7 +23,6 @@ const EventList = () => {
         fetchEvents();
     }, [navigate, user]);
 
-    // In EventList.jsx - update fetchEvents function
     const fetchEvents = async () => {
         try {
             // Redirect System Admin to admin events page
@@ -39,8 +38,6 @@ const EventList = () => {
             const response = await axios.get(endpoint, {
                 withCredentials: true
             });
-
-            // Rest of your existing code...
 
             console.log("API Response:", response);
 
@@ -67,15 +64,26 @@ const EventList = () => {
         }
     };
 
+
+
     return (
         <div className="event-list-container">
             <div className="event-header">
                 <h1 className="page-title">Events</h1>
                 {user?.role === "Organizer" && (
                     <div className="organizer-buttons">
-
                         <Link to="/my-events" className="create-event-button" style={{ marginLeft: '10px' }}>
                             My Events
+                        </Link>
+                    </div>
+                )}
+                {user?.role === "Standard User" && (
+                    <div className="organizer-buttons">
+                        <Link to="/bookings" className="event-button">
+                            My bookings
+                        </Link>
+                        <Link to="/bookings/new" className="create-event-button">
+                            Create booking
                         </Link>
                     </div>
                 )}
@@ -92,6 +100,8 @@ const EventList = () => {
                                 <EventCard event={event} />
                                 <div className="event-actions">
                                     <Link to={`/events/${event._id}`} className="event-button">Details</Link>
+
+
                                 </div>
                             </div>
                         ))

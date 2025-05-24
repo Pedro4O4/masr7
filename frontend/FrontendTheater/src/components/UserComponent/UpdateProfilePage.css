@@ -1,0 +1,141 @@
+.update-profile-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    color: #333;
+}
+
+.update-profile-container h2 {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.update-profile-form {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #dc3545;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #495057;
+    transition: border-color 0.2s;
+    font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.password-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.password-section h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+
+.password-note {
+    margin-bottom: 1rem;
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.cancel-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: #e9ecef;
+    color: #495057;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cancel-btn:hover {
+    background-color: #dee2e6;
+}
+
+.save-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.save-btn:hover {
+    background-color: #2980b9;
+}
+
+.save-btn:disabled {
+    background-color: #a2c8e6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .update-profile-container {
+        padding: 1rem;
+    }
+
+    .update-profile-form {
+        padding: 1.5rem;
+    }
+
+    .form-buttons {
+        flex-direction: column-reverse;
+    }
+
+    .save-btn, .cancel-btn {
+        width: 100%;
+    }
+}

@@ -5,7 +5,18 @@ const cors = require("cors");
 require('dotenv').config();
 
 const app = express();
+const fs = require('fs');
+const path = require('path');
 
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log('Uploads directory created');
+}
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
 // Routers
 const authRouter = require("./Routes/auth");
 
@@ -52,7 +63,7 @@ app.use(function (req, res, next) {
 });
 
 // Start server
-app.listen(3000, () => console.log("Server started"))
+app.listen(process.env.PORT, () => console.log("Server started"))
     .on('error', (err) => {
         console.error("Server error:", err.message);
     });

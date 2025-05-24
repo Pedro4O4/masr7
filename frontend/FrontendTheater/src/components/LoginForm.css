@@ -1,76 +1,140 @@
 /* src/components/LoginForm.css */
+:root {
+    --form-border-radius: 16px;
+    --input-border-radius: 10px;
+    --transition-speed: 0.3s;
+}
+
 .login-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: white;
-    padding: 20px;
+    background: linear-gradient(135deg, var(--dark), #2d2d4d);
+    padding: 2rem;
+    perspective: 1000px;
 }
 
 .login-card {
-    background-color: lightsteelblue;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 255);
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(10px);
+    padding: 2.8rem;
+    border-radius: var(--form-border-radius);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2),
+    0 5px 15px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
     width: 100%;
     max-width: 450px;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
+    transform-style: preserve-3d;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+    0 10px 20px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
 }
 
 .login-title {
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 1.75rem;
+    margin-bottom: 2rem;
     color: white;
     text-align: center;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.login-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-light), var(--secondary));
+    transform: translateX(-50%);
+    border-radius: 10px;
 }
 
 .form-group {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    position: relative;
 }
 
 .form-label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     font-weight: 500;
-    color: #4b5563;
+    color: rgba(255, 255, 255, 0.9);
+    transition: var(--transition-speed);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
 }
 
 .form-input {
     width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+    border-radius: var(--input-border-radius);
     font-size: 1rem;
-    transition: all 0.2s ease;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) inset;
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .form-input:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.25),
+    0 4px 6px rgba(0, 0, 0, 0.1) inset;
+    background-color: rgba(255, 255, 255, 0.12);
 }
 
 .btn-primary {
     width: 100%;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: white;
-    padding: 0.9rem;
+    padding: 1rem;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--input-border-radius);
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
     margin-top: 0.5rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 4px 12px rgba(123, 44, 191, 0.4);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 1px;
+}
+
+.btn-primary:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: var(--transition-speed);
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
-    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(123, 44, 191, 0.6);
+}
+
+.btn-primary:hover:before {
+    left: 100%;
+    transition: 0.7s;
 }
 
 .btn-primary:active {
@@ -78,100 +142,121 @@
 }
 
 .btn-primary:disabled {
-    background: linear-gradient(135deg, #93c5fd, #60a5fa);
+    background: linear-gradient(135deg, #a88bc7, #c9abdf);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
 
-.redirect-link {
-    margin-top: 1.5rem;
-    text-align: center;
-    font-size: 0.95rem;
-    color: #4b5563;
-}
-
-.redirect-link a {
-    color: #2563eb;
-    font-weight: 600;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.redirect-link a:hover {
-    color: #1d4ed8;
-    text-decoration: underline;
-}
-
-/* Error message styling to match register form */
-.error-message {
-    background-color: #fee2e2;
-    border-left: 4px solid #ef4444;
-    color: #b91c1c;
-    padding: 0.8rem 1rem;
-    border-radius: 6px;
+.error-box, .error-message {
+    background-color: rgba(255, 77, 77, 0.15);
+    border-left: 4px solid var(--danger);
+    color: #ff9999;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
     margin-bottom: 1.5rem;
     font-size: 0.95rem;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.error-box {
-    background-color: #fee2e2;
-    border-left: 4px solid #ef4444;
-    color: #b91c1c;
-    padding: 0.8rem 1rem;
-    border-radius: 6px;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
-}
-
-/* Success message styling to match register form */
 .success-message {
-    background-color: #dcfce7;
-    border-left: 4px solid #22c55e;
-    color: #166534;
-    padding: 0.8rem 1rem;
-    border-radius: 6px;
+    background-color: rgba(56, 176, 0, 0.15);
+    border-left: 4px solid var(--success);
+    color: #a3f5a3;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
     margin-bottom: 1.5rem;
     font-size: 0.95rem;
-}
-.redirect-link {
-    margin-top: 1.5rem;
-    text-align: center;
-    font-size: 0.95rem;
-    color: #4b5563;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.redirect-link div {
-    margin: 0.5rem 0;
-}
-
-.mt-2 {
-    margin-top: 0.5rem;
-}
 .redirect-links-container {
-    margin-top: 1.5rem;
+    margin-top: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
+    position: relative;
+    padding-top: 1rem;
+}
+
+.redirect-links-container:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 50%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
 }
 
 .redirect-link-item {
     text-align: center;
     font-size: 0.95rem;
-    color: white;
+    color: rgba(255, 255, 255, 0.7);
     display: flex;
     justify-content: center;
     gap: 0.5rem;
+    transition: var(--transition-speed);
 }
 
 .redirect-link-item a {
-    color: #ffffff;
+    color: var(--secondary);
     font-weight: 600;
-    text-decoration: underline;
+    text-decoration: none;
     transition: all 0.2s ease;
+    position: relative;
+}
+
+.redirect-link-item a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--secondary);
+    transition: width 0.3s ease;
 }
 
 .redirect-link-item a:hover {
-    color: #e0e0e0;
-    text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+    color: var(--secondary);
+    text-shadow: 0 0 8px rgba(255, 158, 0, 0.5);
 }
+
+.redirect-link-item a:hover::after {
+    width: 100%;
+}
+
+/* Media query for responsive design */
+@media (min-width: 768px) {
+    .login-container {
+        background: linear-gradient(135deg, var(--dark), #2d2d4d);
+    }
+
+    .login-card {
+        max-width: 480px;
+    }
+}
+
+/* Animation for form elements */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 20px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.form-group, .login-title, .btn-primary, .redirect-links-container {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.form-group:nth-child(2) { animation-delay: 0.1s; }
+.form-group:nth-child(3) { animation-delay: 0.2s; }
+.btn-primary { animation-delay: 0.3s; }
+.redirect-links-container { animation-delay: 0.4s; }

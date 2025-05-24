@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import './EventDetailPage.css';
+import { getImageUrl } from '../../utils/imageHelper';
 
 const EventDetailsPage = () => {
     const { id } = useParams();
@@ -11,9 +12,9 @@ const EventDetailsPage = () => {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showImageModal, setShowImageModal] = useState(false);
 
     useEffect(() => {
-        // Check if ID exists before making the API call
         if (!id) {
             setError('Event ID is missing. Please select a valid event.');
             setLoading(false);
@@ -56,21 +57,46 @@ const EventDetailsPage = () => {
 
     const canEdit = user && (user.role === 'Organizer' || user.role === 'System Admin');
 
+    const openImageModal = () => {
+        if (event?.image) {
+            setShowImageModal(true);
+        }
+    };
+// Rest of your code remains the same...
+
     if (loading) {
-        return <div className="loading">Loading event details...</div>;
+        return (
+            <div className="event-details-container">
+                <div className="event-details-header">
+                    <h1>Loading...</h1>
+                </div>
+                <div className="event-details-content" style={{justifyContent: 'center', alignItems: 'center'}}>
+                    Loading event details...
+                </div>
+            </div>
+        );
     }
 
     if (error) {
         return (
             <div className="event-details-container">
-                <div className="error-message">{error}</div>
-                <button className="back-button" onClick={() => navigate('/events')}>
-                    Back to Events
-                </button>
+                <div className="event-details-header">
+                    <h1>Error</h1>
+                </div>
+                <div className="event-details-content">
+                    <div className="event-info-item full-width">
+                        <h3>⚠️ Error</h3>
+                        <p>{error}</p>
+                    </div>
+                </div>
+                <div className="event-actions">
+                    <button className="back-button" onClick={() => navigate('/events')}>
+                        Back to Events
+                    </button>
+                </div>
             </div>
         );
     }
-
     if (!event) {
         return (
             <div className="event-details-container">
@@ -86,13 +112,19 @@ const EventDetailsPage = () => {
         <div className="event-details-container">
             <div className="event-details-header">
                 <h1>{event.title}</h1>
-
             </div>
 
             <div className="event-details-content">
-                <div className="event-image-container">
+                <div className="event-image-container" onClick={openImageModal}>
                     {event.image ? (
-                        <img src={event.image} alt={event.title} className="event-image" />
+                        <>
+                            <img
+                                src={getImageUrl(event.image)}
+                                alt={event.title}
+                                className="event-image"
+                            />
+                            <div className="image-overlay">Click to enlarge</div>
+                        </>
                     ) : (
                         <div className="event-no-image">No image available</div>
                     )}
@@ -140,7 +172,26 @@ const EventDetailsPage = () => {
                 <button className="back-button" onClick={() => navigate('/events')}>
                     Back to Events
                 </button>
+
+                {canEdit && (
+                    <Link to={`/my-events/${id}/edit`} className="edit-button">
+                        Edit Event
+                    </Link>
+                )}
             </div>
+
+            {/* Image Modal */}
+            {showImageModal && (
+                <div className="full-image-modal" onClick={() => setShowImageModal(false)}>
+                    <div className="modal-content">
+                        <img src={getImageUrl(event.image)} alt={event.title} />
+                        <button className="close-modal" onClick={(e) => {
+                            e.stopPropagation();
+                            setShowImageModal(false);
+                        }}>×</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

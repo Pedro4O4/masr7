@@ -13,6 +13,7 @@ const Event = require('../Models/Event');
                      message: 'Unauthorized: Only organizers can create events'
                  });
              }
+
              // Extract event details from the request body
              const {
                  title,
@@ -22,26 +23,38 @@ const Event = require('../Models/Event');
                  category,
                  ticketPrice,
                  totalTickets,
-                 status
+                 imageUrl  // Extract imageUrl from request body
              } = req.body;
 
-             // Create a new event
+             // Determine image path based on upload or URL
+             let imagePath;
+             if (imageUrl) {
+                 // Use the provided URL directly
+                 imagePath = imageUrl;
+             } else if (req.file) {
+                 // Use the uploaded file path
+                 imagePath = req.file.path;
+             } else {
+                 // Fall back to default image
+                 imagePath = 'default-image.jpg';
+             }
+
+             // Create event
              const newEvent = new Event({
-                 organizerId:req.user.userId,
+                 organizerId: req.user.userId,
                  title,
                  description,
                  date,
                  location,
                  category,
                  ticketPrice,
-                  totalTickets,
-                 status,
+                 totalTickets,
                  remainingTickets: totalTickets,
-                 // Default status is "pending"
+                 image: imagePath
              });
 
              // Save the event to the database
-             await Event.insertOne(newEvent);
+             await newEvent.save();
 
              res.status(201).json({
                  success: true,
@@ -56,7 +69,8 @@ const Event = require('../Models/Event');
                  error: error.message
              });
          }
-     },
+         },
+
      getApprovedEvents: async (req, res) => {
          try {
              console.log("approved events")
@@ -115,37 +129,52 @@ const Event = require('../Models/Event');
             });
         }
     },
-    updateEvent: async (req, res) => {
-         console.log("update event")
-        try {
-            const event = await Event.findById(req.params.id);
 
-            if (!event) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Event not found'
-                });
-            }
+     updateEvent: async (req, res) => {
+         console.log("update event");
+         try {
+             const event = await Event.findById(req.params.id);
 
+             if (!event) {
+                 return res.status(404).json({
+                     success: false,
+                     message: 'Event not found'
+                 });
+             }
 
-            const updatedEvent = await Event.findByIdAndUpdate(
-                req.params.id,
-                req.body,
-                { new: true, runValidators: true }
-            );
+             // Extract the image URL from the request body
+             const { imageUrl } = req.body;
 
-            res.status(200).json({
-                success: true,
-                data: updatedEvent
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: 'Error updating event',
-                error: error.message
-            });
-        }
-    },
+             // Handle image (either from file upload or URL)
+             if (imageUrl) {
+                 // Use the provided URL
+                 req.body.image = imageUrl;
+                 console.log("Image URL provided:", req.body.image);
+             } else if (req.file) {
+                 // Use the uploaded file path
+                 req.body.image = req.file.path;
+                 console.log("Image uploaded:", req.body.image);
+             }
+             // If neither is provided, keep the existing image
+
+             const updatedEvent = await Event.findByIdAndUpdate(
+                 req.params.id,
+                 req.body,
+                 {new: true, runValidators: true}
+             );
+
+             res.status(200).json({
+                 success: true,
+                 data: updatedEvent
+             });
+         } catch (error) {
+             res.status(500).json({
+                 success: false,
+                 message: 'Error updating event',
+                 error: error.message
+             });
+         }
+     },
     deleteEvent: async (req, res) => {
         try {
             const event = await Event.findById(req.params.id);

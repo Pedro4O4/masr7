@@ -3,7 +3,9 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import './EventForm.css';
-import './EditEventPage.css'
+import './EditEventPage.css';
+import { getImageUrl } from "../../utils/imageHelper.jsx";
+
 const EditEventPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -12,6 +14,7 @@ const EditEventPage = () => {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const [showFullImage, setShowFullImage] = useState(false);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -22,7 +25,11 @@ const EditEventPage = () => {
         category: '',
         ticketPrice: 0,
         totalTickets: 0,
-        image: ''
+        image: '',
+        useImageUrl: false,
+        imageUrl: '',
+        imagePreview: null,
+        imageFile: null
     });
 
     useEffect(() => {
@@ -76,7 +83,11 @@ const EditEventPage = () => {
                 category: eventData.category || '',
                 ticketPrice: eventData.ticketPrice || 0,
                 totalTickets: eventData.totalTickets || 0,
-                image: eventData.image || ''
+                image: eventData.image || '',
+                useImageUrl: false,
+                imageUrl: '',
+                imagePreview: null,
+                imageFile: null
             });
         } catch (err) {
             console.error("Error fetching event:", err);
@@ -104,18 +115,30 @@ const EditEventPage = () => {
             // Combine date and time
             const dateTime = new Date(`${formData.date}T${formData.time}`);
 
-            const eventData = {
-                ...formData,
-                date: dateTime.toISOString()
-            };
+            // Use FormData for file uploads
+            const eventFormData = new FormData();
+            eventFormData.append('title', formData.title);
+            eventFormData.append('description', formData.description);
+            eventFormData.append('date', dateTime.toISOString());
+            eventFormData.append('venue', formData.venue);
+            eventFormData.append('category', formData.category);
+            eventFormData.append('ticketPrice', formData.ticketPrice);
+            eventFormData.append('totalTickets', formData.totalTickets);
 
-            // Remove time field as it's now part of the date
-            delete eventData.time;
+            // Handle image upload
+            if (formData.useImageUrl && formData.imageUrl) {
+                eventFormData.append('imageUrl', formData.imageUrl);
+            } else if (formData.imageFile) {
+                eventFormData.append('image', formData.imageFile);
+            } else if (formData.image && !formData.useImageUrl) {
+                // Keep existing image URL if no new file
+                eventFormData.append('imageUrl', formData.image);
+            }
 
-            await axios.put(`http://localhost:3000/api/v1/event/${id}`, eventData, {
+            await axios.put(`http://localhost:3000/api/v1/event/${id}`, eventFormData, {
                 withCredentials: true,
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
             });
 
@@ -161,7 +184,6 @@ const EditEventPage = () => {
             {success && <div className="success-message">{success}</div>}
 
             <form onSubmit={handleSubmit} className="event-form">
-                {/* Form fields remain the same */}
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
                     <input
@@ -212,26 +234,16 @@ const EditEventPage = () => {
                     </div>
                 </div>
 
-
-
                 <div className="form-group">
                     <label htmlFor="category">Category</label>
-                    <select
+                    <input
+                        type="text"
                         id="category"
                         name="category"
                         value={formData.category}
                         onChange={handleChange}
                         required
-                    >
-                        <option value="">Select a category</option>
-                        <option value="Music">Music</option>
-                        <option value="Sports">Sports</option>
-                        <option value="Arts">Arts</option>
-                        <option value="Theater">Theater</option>
-                        <option value="Conference">Conference</option>
-                        <option value="Workshop">Workshop</option>
-                        <option value="Other">Other</option>
-                    </select>
+                    />
                 </div>
 
                 <div className="form-row">
@@ -262,17 +274,83 @@ const EditEventPage = () => {
                         />
                     </div>
                 </div>
-
                 <div className="form-group">
-                    <label htmlFor="image">Image URL</label>
-                    <input
-                        type="url"
-                        id="image"
-                        name="image"
-                        value={formData.image}
-                        onChange={handleChange}
-                        placeholder="https://example.com/image.jpg"
-                    />
+                    <label htmlFor="image">Event Image</label>
+
+                    {/* Image preview */}
+                    {(formData.imagePreview || formData.image) && (
+                        <div className="image-preview">
+                            <img
+                                src={formData.imagePreview || getImageUrl(formData.image)}
+                                alt="Event preview"
+                                onClick={() => setShowFullImage(true)}
+                            />
+                        </div>
+                    )}
+
+                    {/* Image source selection buttons */}
+                    <div className="image-source-buttons">
+                        <button
+                            type="button"
+                            className={`source-select-btn ${!formData.useImageUrl ? 'active' : ''}`}
+                            onClick={() => setFormData(prev => ({ ...prev, useImageUrl: false }))}
+                        >
+                            Upload Image
+                        </button>
+                        <button
+                            type="button"
+                            className={`source-select-btn ${formData.useImageUrl ? 'active' : ''}`}
+                            onClick={() => setFormData(prev => ({ ...prev, useImageUrl: true }))}
+                        >
+                            Image URL
+                        </button>
+                    </div>
+
+                    {/* Conditional rendering based on selection */}
+                    <div className="image-input-container">
+                        {formData.useImageUrl ? (
+                            <input
+                                type="url"
+                                id="imageUrl"
+                                name="imageUrl"
+                                value={formData.imageUrl || ''}
+                                placeholder="Enter image URL"
+                                onChange={(e) => setFormData(prev => ({
+                                    ...prev,
+                                    imageUrl: e.target.value,
+                                    image: e.target.value,
+                                    imageFile: null,
+                                    imagePreview: null
+                                }))}
+                            />
+                        ) : (
+                            <>
+                                <input
+                                    type="file"
+                                    id="image"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            const previewUrl = URL.createObjectURL(file);
+                                            setFormData(prev => ({
+                                                ...prev,
+                                                imageFile: file,
+                                                imagePreview: previewUrl,
+                                                imageUrl: ''
+                                            }));
+                                        }
+                                    }}
+                                />
+                                {formData.image && !formData.imagePreview && !formData.useImageUrl && (
+                                    <div className="current-image-info">
+                                        Current image: {formData.image.split('/').pop()}
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 <div className="form-actions">
@@ -292,6 +370,22 @@ const EditEventPage = () => {
                     </button>
                 </div>
             </form>
+
+            {/* Full Image Modal */}
+            {showFullImage && (
+                <div className="full-image-modal" onClick={() => setShowFullImage(false)}>
+                    <div className="modal-content">
+                        <img
+                            src={formData.imagePreview || getImageUrl(formData.image)}
+                            alt="Preview"
+                        />
+                        <button className="close-modal" onClick={(e) => {
+                            e.stopPropagation();
+                            setShowFullImage(false);
+                        }}>×</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

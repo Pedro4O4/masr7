@@ -1,3 +1,4 @@
+// frontend/FrontendTheater/src/components/shared/Navbar.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
@@ -28,8 +29,6 @@ const Navbar = () => {
 
                     {isAuthenticated ? (
                         <>
-                            <Link to="/profile" className="nav-item">Profile</Link>
-
                             {/* Standard user links */}
                             {!isAdmin && !isOrganizer && (
                                 <Link to="/bookings" className="nav-item">My Bookings</Link>
@@ -56,22 +55,24 @@ const Navbar = () => {
                                         <Link to="/admin/users">Manage Users</Link>
                                     </div>
                                 </div>
-                            )}
+                            )}):(
+
+                            {/* Profile and Logout - Available for all authenticated users */}
+
                         </>
-                    ) : (
+                    ): (
                         <>
+
+
+
                             <Link to="/login" className="nav-item">Login</Link>
                             <Link to="/register" className="nav-item">Register</Link>
-                        </>
+                            <Link to="/profile" className="nav-item">Profile</Link>
+                            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+
+                            </>
                     )}
                 </div>
-
-                {isAuthenticated && (
-                    <div className="user-section">
-                        <span className="user-greeting">Hello, {currentUser.name}</span>
-                        <button className="logout-btn" onClick={handleLogout}>Logout</button>
-                    </div>
-                )}
             </div>
         </nav>
     );

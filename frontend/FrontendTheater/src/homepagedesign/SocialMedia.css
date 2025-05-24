@@ -1,0 +1,38 @@
+/* SocialMedia.css */
+.social-media-section {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: #f8f9fa;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-top: 1.5rem;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.social-icon img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}

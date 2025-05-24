@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import './EventForm.css';
+import './EventDetailPage.css';
+import { getImageUrl } from '../../utils/imageHelper';
 
 const EventForm = () => {
-    const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
-    const isEditing = Boolean(id);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -18,54 +18,43 @@ const EventForm = () => {
         category: '',
         ticketPrice: '',
         totalTickets: '',
-        image: ''
+        imageFile: null,
+        imagePreview: null,
+        image: '',
+        useImageUrl: false,
+        imageUrl: ''
     });
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showFullImage, setShowFullImage] = useState(false);
 
     useEffect(() => {
-        if (!user || user.role !== 'Organizer') {
-            navigate('/events');
+        if (!user) {
+            navigate('/login');
             return;
         }
 
-        if (isEditing) {
-            fetchEventData();
-        }
-    }, [user, id, navigate]);
+        if (user.role !== 'Organizer') {
+            navigate('/events');
 
-    const fetchEventData = async () => {
-        try {
-            setLoading(true);
-            const response = await axios.get(`http://localhost:3000/api/v1/event/${id}`, {
-                withCredentials: true
-            });
-
-            const event = response.data.data || response.data;
-            setFormData({
-                title: event.title || '',
-                description: event.description || '',
-                date: event.date ? new Date(event.date).toISOString().split('T')[0] : '',
-                location: event.location || '',
-                category: event.category || '',
-                ticketPrice: event.ticketPrice || '',
-                totalTickets: event.totalTickets || '',
-                image: event.image || ''
-            });
-        } catch (err) {
-            setError('Failed to fetch event data. ' + (err.response?.data?.message || err.message));
-        } finally {
-            setLoading(false);
         }
-    };
+    }, [user, navigate]);
+
+    useEffect(() => {
+        return () => {
+            if (formData.imagePreview) {
+                URL.revokeObjectURL(formData.imagePreview);
+            }
+        };
+    }, [formData.imagePreview]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setFormData(prev => ({
+            ...prev,
             [name]: name === 'totalTickets' || name === 'ticketPrice' ? parseFloat(value) || '' : value
-        });
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -73,38 +62,56 @@ const EventForm = () => {
         try {
             setLoading(true);
 
-            const eventData = {
-                ...formData,
-                totalTickets: parseInt(formData.totalTickets),
-                ticketPrice: parseFloat(formData.ticketPrice),
-                remainingTickets: parseInt(formData.totalTickets) // Set initially to total tickets
-            };
+            // Create FormData instance for multipart/form-data
+            const eventFormData = new FormData();
 
-            if (isEditing) {
-                await axios.put(`http://localhost:3000/api/v1/event/${id}`, eventData, {
-                    withCredentials: true
-                });
-            } else {
-                await axios.post('http://localhost:3000/api/v1/event', eventData, {
-                    withCredentials: true
-                });
+            // Add all text fields to FormData
+            eventFormData.append('title', formData.title);
+            eventFormData.append('description', formData.description);
+            eventFormData.append('date', formData.date);
+            eventFormData.append('location', formData.location);
+            eventFormData.append('category', formData.category);
+            eventFormData.append('ticketPrice', parseFloat(formData.ticketPrice));
+            eventFormData.append('totalTickets', parseInt(formData.totalTickets));
+            eventFormData.append('remainingTickets', parseInt(formData.totalTickets));
+
+            // Handle image based on the selected option
+            if (formData.useImageUrl && formData.imageUrl) {
+                // When URL option is selected, use the imageUrl field
+                eventFormData.append('imageUrl', formData.imageUrl);
+            } else if (formData.imageFile) {
+                // When file upload option is selected, use the file
+                eventFormData.append('image', formData.imageFile);
+            } else if (formData.image && !formData.useImageUrl) {
+                // Existing image path if no new image is selected
+                eventFormData.append('imageUrl', formData.image);
             }
 
+            // Create new event
+            const response = await axios.post('http://localhost:3000/api/v1/event', eventFormData, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            console.log('Event created:', response.data);
             navigate('/my-events');
         } catch (err) {
-            setError('Failed to save event. ' + (err.response?.data?.message || err.message));
+            console.error("Error saving event:", err);
+            if (err.response && [401, 403, 405].includes(err.response.status)) {
+                navigate('/login');
+            } else {
+                setError('Failed to save event. ' + (err.response?.data?.message || err.message));
+            }
         } finally {
             setLoading(false);
         }
     };
 
-    if (loading && isEditing) {
-        return <div className="loading">Loading event data...</div>;
-    }
-
     return (
         <div className="event-form-container">
-            <h2>{isEditing ? 'Edit Event' : 'Create New Event'}</h2>
+            <h2>Create New Event</h2>
 
             {error && <div className="error-message">{error}</div>}
 
@@ -201,28 +208,108 @@ const EventForm = () => {
                         placeholder="Enter ticket price"
                     />
                 </div>
-
                 <div className="form-group">
-                    <label htmlFor="image">Image URL</label>
-                    <input
-                        type="url"
-                        id="image"
-                        name="image"
-                        value={formData.image}
-                        onChange={handleChange}
-                        placeholder="Enter image URL"
-                    />
-                </div>
+                    <label htmlFor="image">Event Image</label>
 
+                    {/* Image preview */}
+                    {(formData.imagePreview || formData.image) && (
+                        <div className="image-preview">
+                            <img
+                                src={formData.imagePreview || getImageUrl(formData.image)}
+                                alt="Event preview"
+                                onClick={() => setShowFullImage(true)}
+                            />
+                        </div>
+                    )}
+
+                    {/* Image source selection buttons */}
+                    <div className="image-source-buttons">
+                        <button
+                            type="button"
+                            className={`source-select-btn ${!formData.useImageUrl ? 'active' : ''}`}
+                            onClick={() => setFormData(prev => ({ ...prev, useImageUrl: false }))}
+                        >
+                            Upload Image
+                        </button>
+                        <button
+                            type="button"
+                            className={`source-select-btn ${formData.useImageUrl ? 'active' : ''}`}
+                            onClick={() => setFormData(prev => ({ ...prev, useImageUrl: true }))}
+                        >
+                            Image URL
+                        </button>
+                    </div>
+
+                    {/* Conditional rendering based on selection */}
+                    <div className="image-input-container">
+                        {formData.useImageUrl ? (
+                            <input
+                                type="url"
+                                id="imageUrl"
+                                name="imageUrl"
+                                value={formData.imageUrl || ''}
+                                placeholder="Enter image URL"
+                                onChange={(e) => setFormData(prev => ({
+                                    ...prev,
+                                    imageUrl: e.target.value,
+                                    image: e.target.value,
+                                    imageFile: null,
+                                    imagePreview: null
+                                }))}
+                            />
+                        ) : (
+                            <>
+                                <input
+                                    type="file"
+                                    id="image"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            const previewUrl = URL.createObjectURL(file);
+                                            setFormData(prev => ({
+                                                ...prev,
+                                                imageFile: file,
+                                                imagePreview: previewUrl,
+                                                imageUrl: ''
+                                            }));
+                                        }
+                                    }}
+                                />
+                                {formData.image && !formData.imagePreview && !formData.useImageUrl && (
+                                    <div className="current-image-info">
+                                        Current image: {formData.image.split('/').pop()}
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
                 <div className="form-actions">
                     <button type="button" onClick={() => navigate('/my-events')} className="cancel-button">
                         Cancel
                     </button>
                     <button type="submit" className="submit-button" disabled={loading}>
-                        {loading ? 'Saving...' : (isEditing ? 'Update Event' : 'Create Event')}
+                        {loading ? 'Creating...' : 'Create Event'}
                     </button>
                 </div>
             </form>
+
+            {showFullImage && (
+                <div className="full-image-modal" onClick={() => setShowFullImage(false)}>
+                    <div className="modal-content">
+                        <img
+                            src={formData.imagePreview || getImageUrl(formData.image)}
+                            alt="Preview"
+                        />
+                        <button className="close-modal" onClick={(e) => {
+                            e.stopPropagation();
+                            setShowFullImage(false);
+                        }}>×</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
