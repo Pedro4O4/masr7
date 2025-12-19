@@ -1,0 +1,15 @@
+{
+  "message": "login successfully",
+  "user": {
+    "_id": "682e30bee156dd0ed345bc23",
+    "name": "Pedrozo",
+    "email": "bebonageh68@gmail.com",
+    "password": "$2b$10$bCXp./lpbYq8Z2DlegiK9Ot51XEDHt40wG1TKSxySe1fPGuDPBh.e",
+    "role": "Organizer",
+    "createdAt": "2025-05-21T19:59:58.477Z",
+    "__v": 0,
+    "otp": "120105",
+    "otpExpires": "2025-06-04T17:15:23.860Z",
+    "updatedAt": "2025-06-04T17:38:53.678Z"
+  }
+}

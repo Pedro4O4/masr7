@@ -26,6 +26,7 @@ const authRouter = require("./Routes/auth");
 const UserRouters = require("./Routes/UserRouter");
 const EventRouters = require("./Routes/EventRouter");
 const BookingRouters = require("./Routes/BookingRouter");
+const TheaterRouters = require("./Routes/TheaterRouter");
 
 // Middleware
 const authenticationMiddleware = require('./Middleware/authenticationMiddleware');
@@ -46,6 +47,7 @@ app.use("/api/v1", authRouter);
 app.use("/api/v1/user", UserRouters);
 app.use("/api/v1/event", EventRouters);
 app.use("/api/v1/booking", BookingRouters);
+app.use("/api/v1/theater", TheaterRouters);
 app.use(authenticationMiddleware);
 
 // MongoDB connection

@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="db6a31df-a283-4d6a-bebd-bc61fdb116e5" name="Changes" comment="add console.log" />
+    <list default="true" id="db6a31df-a283-4d6a-bebd-bc61fdb116e5" name="Changes" comment="add console.log">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tailwind.config.js" beforeDir="false" />
+    </list>
     <list id="c8605a3f-78a0-4dbc-af3b-605a536658e5" name="Changes by Lenovo" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +133,7 @@
     &quot;Node.js.index.js.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;#47 on master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.14.0&quot;,
     &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.14.1&quot;,
@@ -369,6 +372,8 @@
       <workItem from="1758612537901" duration="21000" />
       <workItem from="1758612600814" duration="3652000" />
       <workItem from="1758635854414" duration="2477000" />
+      <workItem from="1760339223314" duration="113000" />
+      <workItem from="1761319084631" duration="30000" />
     </task>
     <task id="LOCAL-00079" summary="deploy3">
       <option name="closed" value="true" />

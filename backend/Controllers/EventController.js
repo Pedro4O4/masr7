@@ -83,7 +83,12 @@ const eventcontroller = {
                 category,
                 ticketPrice,
                 totalTickets,
-                imageUrl  // Extract imageUrl from request body
+                imageUrl,
+                // Theater fields
+                theater,
+                hasTheaterSeating,
+                seatPricing,
+                seatConfig
             } = req.body;
 
             // Determine image path based on upload or URL
@@ -109,8 +114,13 @@ const eventcontroller = {
                 category,
                 ticketPrice,
                 totalTickets,
+                totalTickets,
                 remainingTickets: totalTickets,
-                image: imagePath
+                image: imagePath,
+                theater: hasTheaterSeating === 'true' || hasTheaterSeating === true ? theater : null,
+                hasTheaterSeating: hasTheaterSeating === 'true' || hasTheaterSeating === true,
+                seatPricing: seatPricing ? JSON.parse(seatPricing) : [],
+                seatConfig: seatConfig ? JSON.parse(seatConfig) : []
             });
 
             // Save the event to the database
@@ -231,10 +241,29 @@ const eventcontroller = {
             }
             // If neither is provided, keep the existing image
 
+            // Handle seat configuration updates
+            if (req.body.hasTheaterSeating !== undefined) {
+                req.body.hasTheaterSeating = req.body.hasTheaterSeating === 'true' || req.body.hasTheaterSeating === true;
+            }
+            if (req.body.seatPricing) {
+                try {
+                    req.body.seatPricing = JSON.parse(req.body.seatPricing);
+                } catch (e) {
+                    // Already parsed or invalid, ignore
+                }
+            }
+            if (req.body.seatConfig) {
+                try {
+                    req.body.seatConfig = JSON.parse(req.body.seatConfig);
+                } catch (e) {
+                    // Already parsed or invalid
+                }
+            }
+
             const updatedEvent = await Event.findByIdAndUpdate(
                 req.params.id,
                 req.body,
-                {new: true, runValidators: true}
+                { new: true, runValidators: true }
             );
 
             res.status(200).json({

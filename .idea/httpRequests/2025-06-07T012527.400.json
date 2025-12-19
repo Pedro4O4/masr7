@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "message": "Approved events require OTP verification. Please use the OTP verification endpoint."
+}

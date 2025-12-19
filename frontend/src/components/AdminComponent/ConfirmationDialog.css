@@ -1,0 +1,206 @@
+/* ConfirmationDialog.css - Dark theme dialog styling */
+
+/* Confirmation Dialog Modal */
+.confirmation-dialog {
+    background: rgba(30, 30, 50, 0.95);
+    border-radius: 16px;
+    padding: 28px;
+    width: 90%;
+    max-width: 420px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: dialog-fade-in 0.3s ease-out;
+}
+
+@keyframes dialog-fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.confirmation-dialog h2,
+.admin-modal h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #f8fafc;
+    font-size: 1.2rem;
+}
+
+.confirmation-dialog .dialog-message,
+.confirmation-dialog p,
+.admin-modal p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+/* Button Container for dialogs */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* Delete confirmation button */
+.admin-button.delete-confirm {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.admin-button.delete-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* ===== Legacy Admin Container Styles (Updated for dark theme) ===== */
+.admin-container {
+    min-height: 100vh;
+    padding: 30px;
+    background: linear-gradient(135deg, #0f0f17 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.admin-heading {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: #f8fafc;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-message {
+    padding: 20px;
+    background: rgba(30, 30, 50, 0.6);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #94a3b8;
+    border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.admin-error {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* ===== Table Styles (Dark theme) ===== */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background: rgba(30, 30, 50, 0.5);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 15px 18px;
+    text-align: left;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.admin-table th {
+    background: rgba(139, 92, 246, 0.1);
+    font-weight: 600;
+    color: #c4b5fd;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.admin-table td {
+    color: #e2e8f0;
+}
+
+.admin-table tr:hover {
+    background: rgba(139, 92, 246, 0.05);
+}
+
+/* User Row */
+.user-row {
+    transition: background-color 0.2s ease;
+}
+
+.user-id {
+    font-family: monospace;
+    font-size: 0.8em;
+    color: #64748b;
+}
+
+/* Role Badge */
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.role-badge.system-admin {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+}
+
+.role-badge.organizer {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+}
+
+.role-badge.standard-user {
+    background: rgba(34, 211, 238, 0.15);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    color: #22d3ee;
+}
+
+/* Action Buttons Cell */
+.action-cell {
+    display: flex;
+    gap: 8px;
+}
+
+.action-button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.edit-button {
+    background: rgba(34, 211, 238, 0.15);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    color: #22d3ee;
+}
+
+.edit-button:hover {
+    background: rgba(34, 211, 238, 0.25);
+    transform: translateY(-1px);
+}
+
+.delete-button {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+}
+
+.delete-button:hover {
+    background: rgba(239, 68, 68, 0.25);
+    transform: translateY(-1px);
+}
