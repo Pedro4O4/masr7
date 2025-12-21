@@ -1,5 +1,4 @@
-backend/.env
-frontend/FrontendTheater/.env
+
 # Logs
 logs
 *.log
