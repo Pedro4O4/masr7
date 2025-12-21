@@ -1,0 +1,47 @@
+﻿src/app/admin/theaters/[id]/edit/page.tsx(3,29): error TS2307: Cannot find module '../new/page' or its corresponding type declarations.
+src/app/admin/theaters/page.tsx(62,45): error TS2339: Property 'description' does not exist on type 'Theater'.
+src/app/bookings/[id]/page.tsx(76,90): error TS2339: Property 'quantity' does not exist on type 'Booking'.
+src/app/bookings/[id]/page.tsx(78,34): error TS2339: Property 'hasTheaterSeating' does not exist on type 'Booking'.
+src/app/bookings/[id]/page.tsx(81,42): error TS2339: Property 'selectedSeats' does not exist on type 'Booking'.
+src/app/bookings/[id]/page.tsx(81,62): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/app/bookings/[id]/page.tsx(81,65): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/app/bookings/page.tsx(40,45): error TS2551: Property 'eventId' does not exist on type 'Booking'. Did you mean 'event'?
+src/app/bookings/page.tsx(101,52): error TS2551: Property 'eventId' does not exist on type 'Booking'. Did you mean 'event'?
+src/app/bookings/page.tsx(101,84): error TS2551: Property 'eventId' does not exist on type 'Booking'. Did you mean 'event'?
+src/app/bookings/page.tsx(106,90): error TS2339: Property 'createdAt' does not exist on type 'Booking'.
+src/app/bookings/page.tsx(108,101): error TS2339: Property 'quantity' does not exist on type 'Booking'.
+src/app/events/[id]/page.tsx(157,99): error TS2339: Property 'seatPricing' does not exist on type 'Event'.
+src/app/events/[id]/page.tsx(157,117): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/app/events/[id]/page.tsx(157,177): error TS2339: Property 'seatPricing' does not exist on type 'Event'.
+src/app/events/page.tsx(125,92): error TS2322: Type '{ hidden: { opacity: number; y: number; }; visible: { opacity: number; y: number; transition: { duration: number; ease: number[]; }; }; }' is not assignable to type 'Variants'.
+  Property 'visible' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { duration: number; ease: number[]; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { duration: number; ease: number[]; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { duration: number; ease: number[]; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ duration: number; ease: number[]; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ duration: number; ease: number[]; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ duration: number; ease: number[]; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'ease' are incompatible.
+                    Type 'number[]' is not assignable to type 'Easing | Easing[] | undefined'.
+                      Type 'number[]' is not assignable to type 'EasingFunction | Easing[]'.
+                        Type 'number[]' is not assignable to type 'Easing[]'.
+                          Type 'number' is not assignable to type 'Easing'.
+src/app/forgot-password/page.tsx(89,209): error TS2322: Type '(el: HTMLInputElement | null) => HTMLInputElement | null' is not assignable to type 'Ref<HTMLInputElement> | undefined'.
+  Type '(el: HTMLInputElement | null) => HTMLInputElement | null' is not assignable to type '(instance: HTMLInputElement | null) => void | (() => VoidOrUndefinedOnly)'.
+    Type 'HTMLInputElement | null' is not assignable to type 'void | (() => VoidOrUndefinedOnly)'.
+      Type 'null' is not assignable to type 'void | (() => VoidOrUndefinedOnly)'.
+src/app/my-events/page.tsx(163,115): error TS2339: Property 'previousElementSibling' does not exist on type 'EventTarget'.
+src/app/page.tsx(14,17): error TS2305: Module '"@/types/event"' has no exported member 'ApiResponse'.
+src/app/profile/edit/page.tsx(11,19): error TS2339: Property 'updateUser' does not exist on type 'AuthContextType'.
+src/app/profile/edit/page.tsx(20,96): error TS2339: Property 'profilePicture' does not exist on type 'User'.
+src/app/profile/edit/page.tsx(21,22): error TS2339: Property 'profilePicture' does not exist on type 'User'.
+src/app/profile/edit/page.tsx(21,59): error TS2339: Property 'profilePicture' does not exist on type 'User'.
+src/components/Event Components/AdminEventsPage.tsx(274,44): error TS2740: Type 'Event' is missing the following properties from type 'Event': date, category, ticketPrice, remainingTickets, and 2 more.
+src/components/Event Components/EventAnalytics.tsx(155,41): error TS2322: Type 'PieChartDataItem[]' is not assignable to type 'ChartDataInput[]'.
+  Type 'PieChartDataItem' is not assignable to type 'ChartDataInput'.
+    Index signature for type 'string' is missing in type 'PieChartDataItem'.
+src/components/Event Components/EventAnalytics.tsx(159,84): error TS18048: 'percent' is possibly 'undefined'.
+src/components/Event Components/EventForm.tsx(45,80): error TS2339: Property 'seatConfig' does not exist on type 'Partial<Event>'.
+src/components/Event Components/EventForm.tsx(63,26): error TS2339: Property 'seatPricing' does not exist on type 'Partial<Event>'.
+src/components/Event Components/EventForm.tsx(65,25): error TS2339: Property 'seatPricing' does not exist on type 'Partial<Event>'.

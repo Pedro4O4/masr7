@@ -1,0 +1,18 @@
+﻿src/app/admin/theaters/[id]/edit/page.tsx(3,29): error TS2307: Cannot find module '../new/page' or its corresponding type declarations.
+src/app/bookings/page.tsx(106,82): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string | number | Date'.
+      Type 'undefined' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string | number'.
+      Type 'undefined' is not assignable to type 'string | number'.
+src/app/forgot-password/page.tsx(89,209): error TS2322: Type '(el: HTMLInputElement | null) => HTMLInputElement | null' is not assignable to type 'Ref<HTMLInputElement> | undefined'.
+  Type '(el: HTMLInputElement | null) => HTMLInputElement | null' is not assignable to type '(instance: HTMLInputElement | null) => void | (() => VoidOrUndefinedOnly)'.
+    Type 'HTMLInputElement | null' is not assignable to type 'void | (() => VoidOrUndefinedOnly)'.
+      Type 'null' is not assignable to type 'void | (() => VoidOrUndefinedOnly)'.
+src/app/my-events/page.tsx(163,115): error TS2339: Property 'previousElementSibling' does not exist on type 'EventTarget'.
+src/components/Event Components/AdminEventsPage.tsx(274,44): error TS2740: Type 'Event' is missing the following properties from type 'Event': date, category, ticketPrice, remainingTickets, and 2 more.
+src/components/Event Components/EventAnalytics.tsx(155,41): error TS2322: Type 'PieChartDataItem[]' is not assignable to type 'ChartDataInput[]'.
+  Type 'PieChartDataItem' is not assignable to type 'ChartDataInput'.
+    Index signature for type 'string' is missing in type 'PieChartDataItem'.
+src/components/Event Components/EventAnalytics.tsx(159,84): error TS18048: 'percent' is possibly 'undefined'.
