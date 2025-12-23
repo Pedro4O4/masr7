@@ -66,24 +66,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             return { success: false, error: "Login failed" };
         } catch (err: any) {
-            // Handle admin-created users needing password change
-            // NestJS wraps the error response - check both message object and direct properties
+            console.log("Login error caught in AuthContext:", err.response?.status, err.response?.data);
+
             const errorData = err.response?.data;
             const messageData = typeof errorData?.message === 'object' ? errorData.message : errorData;
+            const errorMsg = typeof errorData?.message === 'string' ? errorData.message : messageData?.message;
 
-            if (err.response?.status === 403 && messageData?.requiresPasswordChange) {
+            // Handle admin-created users needing password change
+            if (err.response?.status === 403 && (messageData?.requiresPasswordChange || errorData?.requiresPasswordChange)) {
                 return {
                     success: false,
                     requiresPasswordChange: true,
-                    email: messageData.email,
-                    error: messageData.message || 'Please set your own password.'
+                    email: messageData?.email || errorData?.email,
+                    error: messageData?.message || errorData?.message || 'Please set your own password.'
                 };
             }
+
             // Handle verification required
-            const errorMsg = typeof errorData?.message === 'string' ? errorData.message : messageData?.message;
-            if (err.response?.status === 403 && errorMsg?.includes("verification")) {
-                return { success: false, requiresVerification: true, error: errorMsg };
+            if (err.response?.status === 403 && (messageData?.requiresVerification || errorData?.requiresVerification || (typeof errorMsg === 'string' && errorMsg.toLowerCase().includes("verify")))) {
+                return {
+                    success: false,
+                    requiresVerification: true,
+                    email: credentials.email,
+                    error: errorMsg || "Verification required"
+                };
             }
+
             return { success: false, error: errorMsg || "Login failed" };
         }
     };
