@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FiLock, FiCheck, FiAlertCircle, FiMail, FiShield } from 'react-icons/fi';
@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 type Step = 'password' | 'otp';
 
-const SetPasswordPage = () => {
+const SetPasswordContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -336,6 +336,25 @@ const SetPasswordPage = () => {
                 </div>
             </motion.div>
         </div>
+    );
+};
+
+const SetPasswordPage = () => {
+    return (
+        <Suspense fallback={
+            <div style={{
+                minHeight: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+                color: 'white'
+            }}>
+                Loading...
+            </div>
+        }>
+            <SetPasswordContent />
+        </Suspense>
     );
 };
 
