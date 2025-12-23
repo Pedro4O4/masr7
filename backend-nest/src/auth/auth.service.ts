@@ -45,7 +45,10 @@ export class AuthService {
             isVerified: false,
         });
 
-        await this.mailService.sendVerificationOTP(email, otp);
+        // Send email in background - don't await to avoid UI hang
+        this.mailService.sendVerificationOTP(email, otp).catch(err =>
+            console.error(`Failed to send verification email to ${email}:`, err.message)
+        );
 
         return {
             message:
@@ -107,7 +110,10 @@ export class AuthService {
             user.otpExpires = otpExpires;
             await user.save();
 
-            await this.mailService.sendVerificationOTP(email, otp);
+            // Send email in background - don't await
+            this.mailService.sendVerificationOTP(email, otp).catch(err =>
+                console.error(`Failed to send verification email to ${email}:`, err.message)
+            );
 
             throw new ForbiddenException({
                 message:
@@ -145,7 +151,10 @@ export class AuthService {
         user.otpExpires = otpExpires;
         await user.save();
 
-        await this.mailService.sendPasswordResetOTP(email, otp);
+        // Send email in background - don't await
+        this.mailService.sendPasswordResetOTP(email, otp).catch(err =>
+            console.error(`Failed to send password reset email to ${email}:`, err.message)
+        );
 
         return { message: 'OTP sent to your email.' };
     }
@@ -199,7 +208,10 @@ export class AuthService {
         user.otpExpires = otpExpires;
         await user.save();
 
-        await this.mailService.sendVerificationOTP(email, otp);
+        // Send email in background - don't await
+        this.mailService.sendVerificationOTP(email, otp).catch(err =>
+            console.error(`Failed to send verification email to ${email}:`, err.message)
+        );
 
         return {
             message: 'Password saved. Please verify with the OTP sent to your email.',
