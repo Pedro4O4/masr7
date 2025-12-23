@@ -696,12 +696,6 @@
     overflow: visible;
 }
 
-/* Let scaling work on detail page too */
-.theater-seat-container .theater-canvas {
-    /* transform: none; */
-    /* REMOVED: allow dynamic scaling from SeatSelector.tsx */
-}
-
 /* Show legend but hide selection tools */
 .theater-seat-container .seat-legend {
     display: flex;
