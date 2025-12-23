@@ -709,7 +709,7 @@ const TheaterDesigner = ({
         setNewLabelText('');
         setSelectedLabelPreset(null);
         setShowLabelModal(true);
-    }, []);
+    }, [activeSection]);
 
     const saveLabel = useCallback(() => {
         if (!editingLabel) return;
