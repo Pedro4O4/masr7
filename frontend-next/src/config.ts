@@ -1,14 +1,17 @@
-// Dynamically detect the host - works on both localhost and network IP
+// Use environment variable for production, fallback to localhost for development
 const getBaseUrl = () => {
-    if (typeof window !== 'undefined') {
-        // Client-side: use the current hostname
-        return `http://${window.location.hostname}:3001`;
+    // Check for environment variable first (for production)
+    if (process.env.NEXT_PUBLIC_API_URL) {
+        return process.env.NEXT_PUBLIC_API_URL;
     }
-    // Server-side: fallback to localhost
-    return process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001";
+
+    if (typeof window !== 'undefined') {
+        // Client-side development: use the current hostname
+        return `http://${window.location.hostname}:3002`;
+    }
+    // Server-side fallback
+    return "http://localhost:3002";
 };
 
 export const BASE_URL = getBaseUrl();
 export const API_BASE_URL = `${BASE_URL}/api/v1`;
-
-
