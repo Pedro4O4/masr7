@@ -77,7 +77,7 @@ let AuthService = class AuthService {
             otpExpires,
             isVerified: false,
         });
-        await this.mailService.sendVerificationOTP(email, otp);
+        this.mailService.sendVerificationOTP(email, otp).catch(err => console.error(`Failed to send verification email to ${email}:`, err.message));
         return {
             message: 'Registration initiated. Please verify your email with the OTP sent.',
         };
@@ -122,7 +122,7 @@ let AuthService = class AuthService {
             user.otp = otp;
             user.otpExpires = otpExpires;
             await user.save();
-            await this.mailService.sendVerificationOTP(email, otp);
+            this.mailService.sendVerificationOTP(email, otp).catch(err => console.error(`Failed to send verification email to ${email}:`, err.message));
             throw new common_1.ForbiddenException({
                 message: 'Account not verified. A new verification code has been sent to your email.',
                 requiresVerification: true,
@@ -152,7 +152,7 @@ let AuthService = class AuthService {
         user.otp = otp;
         user.otpExpires = otpExpires;
         await user.save();
-        await this.mailService.sendPasswordResetOTP(email, otp);
+        this.mailService.sendPasswordResetOTP(email, otp).catch(err => console.error(`Failed to send password reset email to ${email}:`, err.message));
         return { message: 'OTP sent to your email.' };
     }
     async resetPassword(resetDto) {
@@ -188,7 +188,7 @@ let AuthService = class AuthService {
         user.otp = otp;
         user.otpExpires = otpExpires;
         await user.save();
-        await this.mailService.sendVerificationOTP(email, otp);
+        this.mailService.sendVerificationOTP(email, otp).catch(err => console.error(`Failed to send verification email to ${email}:`, err.message));
         return {
             message: 'Password saved. Please verify with the OTP sent to your email.',
             email: email,

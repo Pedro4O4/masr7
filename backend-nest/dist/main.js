@@ -12,33 +12,37 @@ async function bootstrap() {
     app.use((0, cookie_parser_1.default)());
     app.use((0, express_1.json)({ limit: '50mb' }));
     app.use((0, express_1.urlencoded)({ limit: '50mb', extended: true }));
-    const isDevelopment = process.env.NODE_ENV !== 'production';
-    const allowedOrigins = process.env.CLIENT_ORIGINS
-        ? process.env.CLIENT_ORIGINS.split(',')
-        : ['http://localhost:3000', 'http://localhost:5173'];
+    const isProd = process.env.NODE_ENV === 'production';
+    const rawOrigins = process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN;
+    const allowedOrigins = rawOrigins
+        ? rawOrigins.split(',').map(o => o.trim())
+        : ['http://localhost:3000', 'http://localhost:3002', 'http://localhost:5173'];
     app.enableCors({
         origin: (origin, callback) => {
             if (!origin) {
                 callback(null, true);
                 return;
             }
-            if (isDevelopment) {
-                callback(null, true);
-                return;
-            }
-            if (allowedOrigins.includes(origin)) {
-                callback(null, true);
+            if (isProd) {
+                if (allowedOrigins.some(ao => origin.includes(ao) || ao === '*')) {
+                    callback(null, true);
+                }
+                else {
+                    console.log(`CORS blocked for origin: ${origin}`);
+                    callback(null, false);
+                }
             }
             else {
-                callback(null, false);
+                callback(null, true);
             }
         },
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         credentials: true,
         allowedHeaders: 'Content-Type, Authorization',
     });
-    await app.listen(3001, '0.0.0.0');
-    console.log('🚀 Backend running on http://localhost:3001');
+    const port = process.env.PORT || 3001;
+    await app.listen(port, '0.0.0.0');
+    console.log(`🚀 Backend running on port ${port}`);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
